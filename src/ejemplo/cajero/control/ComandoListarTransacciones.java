@@ -6,23 +6,25 @@ import ejemplo.cajero.modelo.Cuenta;
 /**
  * Comando usado para listar las cuentas 
  */
-public class ComandoListarCuentas implements Comando {
+public class ComandoListarTransacciones implements Comando {
 
 	@Override
 	public String getNombre() {
-		return "Listar Cuentas";
+		return "Listar Transacciones";
 	}
 
 	@Override
 	public void ejecutar(Banco contexto, Cuenta cuenta) throws Exception {
 		
-		System.out.println("Listado de Cuentas");
+		System.out.println("Listado de Transacciones");
 		System.out.println();
-	
-		
-		System.out.println(cuenta.getNumero() + " : $ " + cuenta.getSaldo());
+		getLog();
 		
 
+	}
+	
+	private void getLog() {
+		
 	}
 
 }

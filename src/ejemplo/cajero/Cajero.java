@@ -11,6 +11,7 @@ import ejemplo.cajero.control.ComandoRetirar;
 import ejemplo.cajero.control.ComandoTransferir;
 import ejemplo.cajero.modelo.Banco;
 import ejemplo.cajero.modelo.Cuenta;
+import ejemplo.cajero.modelo.Log;
 
 /**
  * Simulador de un Cajero de Banco
@@ -26,6 +27,7 @@ public class Cajero {
 		
 		// crea el banco
 		Banco banco = new Banco();
+		Cuenta cuentaLogged = null;
 		
 		// crea unas cuentas, para la prueba
 		banco.agregarCuenta(new Cuenta("1", "clave", 1000));
@@ -45,35 +47,61 @@ public class Cajero {
 		
 		boolean fin = false;
 		do {
-			
-			// muestra los nombres de los comandos
-			muestraMenuConComandos(comandos);
-			System.out.println("X.- Salir");
-			
-			// la clase Console no funciona bien en Eclipse
-			Scanner console = new Scanner(System.in);			
-			String valorIngresado = console.nextLine();
-			
-			// obtiene el comando a ejecutar
-			Comando comandoSeleccionado = retornaComandoSeleccionado(comandos, valorIngresado);
-			if (comandoSeleccionado != null) {
+			if(cuentaLogged != null) {
+				// muestra los nombres de los comandos
+				muestraMenuConComandos(comandos);
+				System.out.println("X.- Salir");
 				
-				// intenta ejecutar el comando
-				try {
-					comandoSeleccionado.ejecutar(banco);
+				// la clase Console no funciona bien en Eclipse
+				Scanner console = new Scanner(System.in);			
+				String valorIngresado = console.nextLine();
+				
+				// obtiene el comando a ejecutar
+				Comando comandoSeleccionado = retornaComandoSeleccionado(comandos, valorIngresado);
+				if (comandoSeleccionado != null) {
 					
-				} catch (Exception e) {
-					// si hay una excepción, muestra el mensaje
-					System.err.println(e.getMessage());
+					// intenta ejecutar el comando
+					try {
+						comandoSeleccionado.ejecutar(banco, cuentaLogged);
+						
+					} catch (Exception e) {
+						// si hay una excepción, muestra el mensaje
+						System.err.println(e.getMessage());
+					}
+					
+				} 
+				// si no se obtuvo un comando, puede ser la opción de salir
+				else if (valorIngresado.equalsIgnoreCase("X")) {
+					fin = true;
 				}
 				
-			} 
-			// si no se obtuvo un comando, puede ser la opción de salir
-			else if (valorIngresado.equalsIgnoreCase("X")) {
-				fin = true;
+				System.out.println();
+			}else {
+				
+				// la clase Console no funciona bien en Eclipse
+				Scanner console = new Scanner(System.in);
+				System.out.println("Escriba el número de cuenta");
+				String cuenta = console.nextLine();
+				System.out.println("Escriba la contraseña");
+				String clave = console.nextLine();
+				
+				// obtiene el comando a ejecutar
+				try {
+					Cuenta cuentaLogin = banco.buscarCuenta(cuenta);
+					if (cuentaLogin != null) {
+						if (cuentaLogin.logIn(clave)) {
+							cuentaLogged = cuentaLogin;
+						}
+					}
+					else {
+						System.out.println("Cuenta o Contraseña Inválidas");
+						fin = true;
+					}
+				}catch (Exception e) {
+					System.err.println(e.getMessage());
+				}
+				System.out.println();
 			}
-			
-			System.out.println();
 		} while ( !fin );
 		
 		System.out.println("Gracias por usar el programa.");
@@ -88,11 +116,6 @@ public class Cajero {
 		
 		// crea los comandos que se van a usar en la aplicación
 		List<Comando> comandos = new ArrayList<>();
-		
-		comandos.add(new ComandoListarCuentas());
-		comandos.add(new ComandoRetirar());
-		comandos.add(new ComandoConsignar());
-		comandos.add(new ComandoTransferir());
 
 		return comandos;
 	}

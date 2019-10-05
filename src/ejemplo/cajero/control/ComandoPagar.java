@@ -6,20 +6,20 @@ import ejemplo.cajero.modelo.Banco;
 import ejemplo.cajero.modelo.Cuenta;
 
 /**
- * Comando usado para consignar dinero
+ * Comando usado para pagar dinero
  */
-public class ComandoConsignar implements Comando {
+public class ComandoPagar implements Comando {
 
 	@Override
 	public String getNombre() {
-		return "Consignar dinero";
+		return "Pagar dinero";
 	}
 
 	@SuppressWarnings("resource")
 	@Override
 	public void ejecutar(Banco contexto, Cuenta cuenta) throws Exception {
 		
-		System.out.println("Consignación de Dinero");
+		System.out.println("Pago de Dinero");
 		System.out.println();
 		
 		// la clase Console no funciona bien en Eclipse
@@ -29,15 +29,15 @@ public class ComandoConsignar implements Comando {
 			throw new Exception("No existe cuenta ");
 		}
 		
-		System.out.println("Ingrese el valor a consignar");
+		System.out.println("Ingrese el valor a pagar");
 		String valor = console.nextLine();
 	
 		try {
 			long valorNumerico = Long.parseLong(valor);
-			cuenta.consignar(valorNumerico);
+			cuenta.retirar(valorNumerico);
 		
 		} catch (NumberFormatException e) {
-			throw new Exception("Valor a consignar no válido : " + valor);
+			throw new Exception("Valor a pagar no válido : " + valor);
 		}
 	}
 

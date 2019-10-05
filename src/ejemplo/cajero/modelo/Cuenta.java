@@ -55,5 +55,13 @@ public class Cuenta {
 		}
 		this.saldo -= valor;
 	}
+
+	// login de cuenta
+	public boolean logIn(String clave) throws Exception {
 		
+		if (this.clave.equals(clave)) {
+			return true;
+		}
+		return false;
+	}
 }

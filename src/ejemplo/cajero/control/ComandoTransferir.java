@@ -17,7 +17,7 @@ public class ComandoTransferir implements Comando {
 
 	@SuppressWarnings("resource")
 	@Override
-	public void ejecutar(Banco contexto) throws Exception {
+	public void ejecutar(Banco contexto, Cuenta cuenta) throws Exception {
 		
 		System.out.println("Transferencia de Dinero");
 		System.out.println();
@@ -25,13 +25,9 @@ public class ComandoTransferir implements Comando {
 		// la clase Console no funciona bien en Eclipse
 		Scanner console = new Scanner(System.in);			
 		
-		// Ingresa los datos
-		System.out.println("Ingrese el número de cuenta origen");
-		String numeroCuentaOrigen = console.nextLine();
-		
-		Cuenta cuentaOrigen = contexto.buscarCuenta(numeroCuentaOrigen);
+		Cuenta cuentaOrigen = cuenta;
 		if (cuentaOrigen == null) {
-			throw new Exception("No existe cuenta con el número " + numeroCuentaOrigen);
+			throw new Exception("No existe cuenta ");
 		}
 
 		System.out.println("Ingrese el número de cuenta destino");
